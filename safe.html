@@ -1,0 +1,282 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>SafeTap Sphere — Hackathon Demo</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+ <link rel="stylesheet" href="safeStyling.css">
+</head>
+<body>
+  <div class="app">
+    <nav class="topnav">
+      <button data-screen="home" class="active">HOME</button>
+      <button data-screen="sos">SOS</button>
+      <button data-screen="map">MAP</button>
+      <button data-screen="report">REPORT</button>
+      <button data-screen="support">SUPPORT</button>
+      <button data-screen="education">EDUCATION</button>
+      <button data-screen="admin">ADMIN</button>
+      <button data-screen="settings">SETTINGS</button>
+    </nav>
+
+    <main>
+      
+      <section id="home" class="screen active">
+        <h1><i>SAFE TAP SPHERE</i></h1>
+        <p class="lead">Your safety companion powered by AI, community, and awareness.</p>
+        <div class="quick">
+          <button id="quickSOS" class="primary">QUICK SOS</button>
+          <button id="simulateTap" class="ghost">SIMULATE TAP</button>
+          <button id="simulateShake" class="ghost">SIMULATE SHAKE</button>
+          <button id="startVoice" class="ghost">START VOICE LISTEN</button>
+        </div>
+        <p class="lead">Stay aware. Stay safe. Empower your community.</p>
+      </section>
+
+      
+      <section id="sos" class="screen">
+        <h2>SOS Activation</h2>
+        <p>Press the big button below to send an emergency alert.</p>
+        <button id="sosBtnLarge" class="sos-large">SEND SOS</button>
+        <div id="sosStatus" class="lead"></div>
+      </section>
+
+     
+      <section id="mapScreen" class="screen">
+        <h2>Live Map & Safety Zones</h2>
+        <div class="controls">
+          <button id="showMarkers">Show Markers</button>
+          <button id="showHeat">Show Heatmap</button>
+          <button id="clearReports">Clear Reports</button>
+        </div>
+        <div id="mapContainer">
+          <div id="map"></div>
+          <pre id="reportsPre" class="reportsPre">No reports yet.</pre>
+        </div>
+      </section>
+
+      
+      <section id="report" class="screen">
+        <h2>Anonymous Reporting</h2>
+        <form id="reportForm">
+          <label>Type
+            <select id="rType">
+              <option value="harassment">Harassment</option>
+              <option value="theft">Theft</option>
+              <option value="violence">Violence</option>
+              <option value="other">Other</option>
+            </select>
+          </label>
+          <label>Description
+            <textarea id="rDesc" rows="4" required placeholder="Describe what happened..."></textarea>
+          </label>
+          <label class="inline">
+            <input type="checkbox" id="rAnon" checked /> Submit anonymously
+          </label>
+          <div class="formActions">
+            <button type="submit" class="primary">Submit Report</button>
+          </div>
+        </form>
+        <div id="reportStatus" class="lead"></div>
+      </section>
+
+      
+      <section id="support" class="screen">
+        <h2>Support & Resources</h2>
+        <div class="card-grid">
+          <div class="card">
+            <h3>Emergency Hotline</h3>
+            <p>Call 10111 (South Africa Police) or 112 from mobile.</p>
+            <button class="primary" onclick="alert('Calling emergency...')">Call Now</button>
+          </div>
+          <div class="card">
+            <h3>Counselling</h3>
+            <p>Talk to a licensed counsellor for trauma or anxiety support.</p>
+            <button class="ghost">Chat with Counsellor</button>
+          </div>
+          <div class="card">
+            <h3>Legal Help</h3>
+            <p>Free legal aid for victims of harassment and abuse.</p>
+            <button class="ghost">Contact Legal Advisor</button>
+          </div>
+        </div>
+      </section>
+
+      
+      <section id="education" class="screen">
+        <h2>Education Hub</h2>
+        <p>Learn about your rights, self-defence, and mental health awareness.</p>
+        <div class="card-grid">
+          <div class="card"><h3>Know Your Rights</h3><p><b>Your Legal and Personal Rights in GBV Situations</b>
+<ul>
+<li>You have the right to live free from any form of abuse — physical, emotional, sexual, or financial.</li>
+<li>You can report GBV to any police station — the police must assist you immediately.</li>
+<li>You have the right to apply for a Protection Order (restraining order) to keep the abuser away.</li>
+<li>Hospitals must provide free emergency medical treatment and help collect evidence.</li>
+<li>Your personal information must be kept private and confidential.</li>
+<li>You can insist on respectful treatment from police, doctors, or legal officers.</li>
+<li>You have the right to free counselling and shelter if you are unsafe at home.</li>
+<li>Online abuse (harassment, sharing private photos, or threats) is also a crime — and you can report it.</li></ul>
+
+<i>SafeTap helps you report abuse safely, connect to legal aid, and find protection resources.</i> </p></div>
+          <br>
+          <div class="card"><h3>Self-Defence Basics</h3><p><b>Simple Steps to Protect Yourself Safely</b>
+<ul>
+<li>Stay aware of your surroundings — trust your instincts if something feels wrong.</li>
+<li>Use your voice — shout “NO!” or “HELP!” to attract attention.</li>
+<li>Keep keys, alarms, or SafeTap SOS accessible for emergencies.</li>
+<li>Create distance — step back, block, or push away if someone approaches aggressively.</li>
+<li>Target vulnerable areas (eyes, throat, knees) if you must defend yourself.</li>
+<li>Take basic self-defence classes — SafeTap can list nearby workshops.</li>
+<li>Avoid confrontation if possible — escaping to safety is the first goal.</li>
+<li>Keep your location sharing on in the SafeTap app when walking alone at night.</li>
+</ul>
+<i> Self-defence is about protection, not violence — use it only to escape danger.</i></p></div>
+          <br>
+          <div class="card"><h3>Mental Health</h3><p><b>Emotional Healing and Support After GBV</b> 
+<ul>
+<li>It’s normal to feel fear, anger, shame, or confusion — you are not alone.</li>
+<li>Speak to a trusted friend, counsellor, or mental health professional — talking helps you heal.</li>
+<li>You have the right to trauma counselling and psychological support services after abuse.</li>
+<li>Practice self-care: sleep, eat properly, and take time to rest.</li>
+<li>>Avoid isolation — join survivor support groups or community healing programs.</li>
+<li>Breathing and relaxation exercises can reduce panic and anxiety.</li>
+<li>You can use SafeTap’s Resources to access hotlines, online therapy links, or nearby clinics.</li>
+</ul>
+<i> mental recovery is part of justice — healing your mind empowers your future.</i></p></div>
+        </div>
+      </section>
+
+      
+      <section id="admin" class="screen">
+        <h2>Community Impact Dashboard</h2>
+        <canvas id="chart" width="400" height="200"></canvas>
+        <p class="lead">Visualizing reports and SOS activity.</p>
+      </section>
+
+      <!-- SETTINGS -->
+      <section id="settings" class="screen">
+        <h2>Settings & Profile</h2>
+        <label>Preferred Language:
+          <select id="langSelect">
+            <option>English</option>
+            <option>Zulu</option>
+            <option>Sesotho</option>
+          </select>
+        </label>
+        <label>Alert Method:
+          <select id="alertMethod">
+            <option>Push Notification</option>
+            <option>SMS</option>
+            <option>Email</option>
+          </select>
+        </label>
+        <label>Trusted Contact:
+          <input type="text" id="trustedContact" placeholder="+27..." />
+        </label>
+        <button class="primary" onclick="alert('Settings saved!')">Save Settings</button>
+      </section>
+    </main>
+
+    <footer>
+      <small>&copy; 2025 SafeTap Sphere — Built for FNB Hackathon by TUT Students</small>
+    </footer>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script>
+const $ = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
+const STORAGE_KEY = "safetap_reports_v1";
+
+// Navigation
+$$('.topnav button').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    $$('.topnav button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    $$('.screen').forEach(sec=>sec.classList.remove('active'));
+    const id = btn.dataset.screen === 'map' ? 'mapScreen' : btn.dataset.screen;
+    $('#'+id).classList.add('active');
+  });
+});
+
+// Storage & reports
+function loadReports(){return JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]");}
+function saveReports(r){localStorage.setItem(STORAGE_KEY,JSON.stringify(r));}
+function renderReports(){const pre=$('#reportsPre');const r=loadReports();pre.textContent=r.length?JSON.stringify(r,null,2):'No reports yet.';}
+
+async function createReport({type,description,anonymous}){
+  let lat=-33.9,lon=18.4;
+  try{const pos=await new Promise((res,rej)=>navigator.geolocation.getCurrentPosition(res,rej,{timeout:3000}));
+    lat=pos.coords.latitude;lon=pos.coords.longitude;
+  }catch{}
+  const rep={id:Date.now(),type,description,anonymous,lat,lon,ts:new Date().toISOString()};
+  const arr=loadReports();arr.push(rep);saveReports(arr);renderReports();return rep;
+}
+
+// SOS + Quick Triggers
+$('#quickSOS').onclick=()=>{createReport({type:'SOS',description:'Quick SOS',anonymous:true});alert('Quick SOS recorded!');};
+$('#simulateTap').onclick=()=>{createReport({type:'Tap',description:'Tap trigger',anonymous:true});alert('Tap simulated');};
+$('#simulateShake').onclick=()=>{createReport({type:'Shake',description:'Shake simulated',anonymous:true});alert('Shake simulated');};
+$('#sosBtnLarge').onclick=async()=>{$('#sosStatus').textContent='Sending SOS...';const r=await createReport({type:'SOS',description:'SOS activated',anonymous:false});$('#sosStatus').textContent='SOS logged ID '+r.id;};
+
+// Report Form
+$('#reportForm').onsubmit=async e=>{
+  e.preventDefault();
+  const type=$('#rType').value,desc=$('#rDesc').value,anon=$('#rAnon').checked;
+  const r=await createReport({type,description:desc,anonymous:anon});
+  $('#reportStatus').textContent='Report saved (id '+r.id+')';
+  $('#rDesc').value='';
+};
+
+// Map + Heatmap
+const map=L.map('map').setView([-33.9258,18.4233],13);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19}).addTo(map);
+let markerLayer=L.layerGroup().addTo(map),heatLayer=null;
+
+function showMarkers(){
+  markerLayer.clearLayers();
+  const r=loadReports();
+  r.forEach(x=>L.marker([x.lat,x.lon]).bindPopup('<b>'+x.type+'</b><br>'+x.description).addTo(markerLayer));
+  if(r.length) map.fitBounds(markerLayer.getBounds());
+}
+function showHeat(){
+  if(heatLayer) map.removeLayer(heatLayer);
+  const pts=loadReports().map(x=>[x.lat,x.lon,0.6]);
+  heatLayer=L.heatLayer(pts,{radius:25}).addTo(map);
+}
+$('#showMarkers').onclick=showMarkers;
+$('#showHeat').onclick=showHeat;
+$('#clearReports').onclick=()=>{localStorage.removeItem(STORAGE_KEY);markerLayer.clearLayers();if(heatLayer)map.removeLayer(heatLayer);renderReports();};
+
+// Voice Recognition
+let recognition;
+if('webkitSpeechRecognition' in window){
+  recognition=new webkitSpeechRecognition();
+  recognition.continuous=true;
+  recognition.onresult=async e=>{
+    const text=e.results[e.resultIndex][0].transcript.toLowerCase();
+    if(text.includes('help')||text.includes('safe tap')){
+      await createReport({type:'Voice',description:text,anonymous:true});
+      alert('Voice-triggered SOS detected!');
+    }
+  };
+}
+$('#startVoice').onclick=()=>{if(recognition){recognition.start();alert('Listening... say "Help me"');}else alert('Voice recognition not supported');};
+
+// Admin Dashboard Chart
+const ctx=document.getElementById('chart');
+const chart=new Chart(ctx,{type:'bar',data:{labels:['SOS','Tap','Shake','Voice','Report'],
+datasets:[{label:'Incident Counts',data:[3,2,1,1,4],backgroundColor:'rgba(106,90,249,0.6)'}]},options:{plugins:{legend:{display:false}}}});
+
+// Init
+renderReports();
+showMarkers();
+  </script>
+</body>
+</html>
+
