@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Profile & Login - SafeTap Sphere</title>
+  <style>
+    body {
+      font-family: Inter, system-ui, Arial;
+      background: linear-gradient(180deg, #eef2ff, #ffffff);
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 8px 28px rgba(2, 6, 23, 0.06);
+      width: 360px;
+      padding: 20px;
+    }
+    h2 { text-align: center; color: #333; }
+    label { display: block; margin: 10px 0 6px; color: #333; font-weight: 500; }
+    input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; }
+    button {
+      width: 100%; padding: 10px; border: none; border-radius: 10px;
+      cursor: pointer; background: linear-gradient(90deg, #6a5af9, #7dd3fc);
+      color: white; font-weight: 600; margin-top: 10px;
+    }
+    p { text-align: center; margin-top: 10px; color: #555; }
+    a { color: #6a5af9; text-decoration: none; font-weight: 600; cursor: pointer; }
+  </style>
+</head>
+<body>
+
+  <div class="container" id="createProfile">
+    <h2>Create Profile</h2>
+    <form id="profileForm">
+      <label>Full Name:</label>
+      <input type="text" id="pName" required placeholder="Enter your full name">
+
+      <label>Email:</label>
+      <input type="email" id="pEmail" required placeholder="Enter your email">
+
+      <label>Password:</label>
+      <input type="password" id="pPass" required placeholder="Create a password">
+
+      <label>Confirm password:</label>
+      <input type="password" id="loginPass" required placeholder="Re-enter your password">
+
+      <label>Phone Number:</label>
+      <input type="text" id="pPhone" required placeholder="+27...">
+
+      <button type="submit">Create Profile</button>
+    </form>
+    <p>Already have an account? <a id="gotoLogin">Login here</a></p>
+  </div>
+
+  <div class="container" id="loginPage" style="display:none;">
+    <h2>Login</h2>
+    <form id="loginForm">
+      <label>Email:</label>
+      <input type="email" id="loginEmail" required placeholder="Enter your email">
+      <label>Password:</label>
+      <input type="password" id="loginPass" required placeholder="Enter your password">
+      
+      <button type="button" onclick="location.href='/FNB Hackerthon/safe.html'">Login</button>
+
+      
+    </form>
+    <p>Don’t have a profile? <a id="gotoCreate">Create one</a></p>
+  </div>
+
+  <script>
+    const PROFILE_KEY = "safetap_user";
+
+    const createProfile = document.getElementById("createProfile");
+    const loginPage = document.getElementById("loginPage");
+
+    // Switch between pages
+    document.getElementById("gotoLogin").onclick = () => {
+      createProfile.style.display = "none";
+      loginPage.style.display = "block";
+    };
+    document.getElementById("gotoCreate").onclick = () => {
+      loginPage.style.display = "none";
+      createProfile.style.display = "block";
+    };
+
+    // Handle profile creation
+    document.getElementById("profileForm").onsubmit = e => {
+      e.preventDefault();
+      const user = {
+        name: document.getElementById("pName").value,
+        email: document.getElementById("pEmail").value,
+        pass: document.getElementById("pPass").value,
+        phone: document.getElementById("pPhone").value
+      };
+      localStorage.setItem(PROFILE_KEY, JSON.stringify(user));
+      alert("Profile created successfully! Please log in.");
+      createProfile.style.display = "none";
+      loginPage.style.display = "block";
+    };
+
+    // Handle login
+    document.getElementById("loginForm").onsubmit = e => {
+      e.preventDefault();
+      const stored = JSON.parse(localStorage.getItem(PROFILE_KEY));
+      const email = document.getElementById("loginEmail").value;
+      const pass = document.getElementById("loginPass").value;
+
+      if (!stored) return alert("No profile found. Please create one first.");
+      if (stored.email === email && stored.pass === pass) {
+        localStorage.setItem("safetap_logged_in", "true");
+        alert("Login successful!");
+        window.location.href = "safetap.html"; // Redirect to the main SafeTap app
+      } else {
+        alert("Invalid credentials. Please try again.");
+      }
+    };
+  </script>
+
+</body>
+</html>
