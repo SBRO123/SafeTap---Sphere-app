@@ -5,7 +5,7 @@
   <title>SafeTap Sphere — Hackathon </title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
- <link rel="stylesheet" href="safeStyling.css">
+  <link rel="stylesheet" href="safeStyling.css">
 </head>
 <body>
   <div class="app">
@@ -19,12 +19,12 @@
       <button data-screen="admin">ADMIN</button>
       <button data-screen="settings">SETTINGS</button>
     </nav>
-
+    
     <main>
       
       <section id="home" class="screen active" style="text-align: center; background: linear-gradient(135deg, #fee2e2, #d5c1c1);">
         <div style="text-align: center; margin-bottom: 32px;">
-<h1 style="font-size: 3rem; background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 16px;">🔒 SAFE TAP SPHERE</h1>
+<h1 style="font-size: 3rem; background: linear-gradient(135deg, var(--accent-1), var(--accent-2)); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 16px;">🔒 SAFE TAP SPHERE</h1>
 <p class="lead" style="font-size: 1.2rem; max-width: 600px; margin: 0 auto; color: black;">Your intelligent safety companion powered by AI, community support, and real-time awareness.</p>
 </div>
         <div class="card-grid" style="margin-bottom: 32px;">
@@ -32,14 +32,14 @@
 <h3 style="color: red; margin-bottom: 16px;"> Emergency Actions</h3>
 <div class="quick" style="flex-direction: column; gap: 12px;">
 <button id="quickSOS" class="primary" style="width: 100%; background: linear-gradient(135deg, var(--danger), #b11d1d);"> QUICK SOS</button>
-<button id="simulateTap" style="color: rgb(168, 3, 3);" class="ghost" style="width: 100%;"> <b>SIMULATE TAP</b></button>
+<button id="simulateTap" class="ghost" style="width:100%; color: rgb(168,3,3);"><b>SIMULATE TAP</b></button>
 </div>
 </div>
 <div class="card" style="text-align: center; background: linear-gradient(135deg, #dbeafe, #1a5bab);">
 <h3 style="color: blue; margin-bottom: 16px;"> Detection Features</h3>
 <div class="quick" style="flex-direction: column; gap: 12px;">
-<button id="simulateShake" style="color: rgb(2, 2, 190);" class="ghost" style="width: 100%;"> <b>SIMULATE SHAKE</b></button>
-<button id="startVoice" class="ghost" style="color: rgb(2, 2, 190);" style="width: 100%;"> <b>VOICE LISTEN</b></button>
+<button id="simulateShake" class="ghost" style="width:100%; color: rgb(2,2,190);"><b>SIMULATE SHAKE</b></button>
+<button id="startVoice" class="ghost" style="width:100%; color: rgb(2,2,190);"><b>VOICE LISTEN</b></button>
 </div>
 </div>
 </div>
