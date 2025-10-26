@@ -87,18 +87,43 @@
         <div class="card-grid">
           <div class="card">
             <h3>Emergency Hotline</h3>
-            <p>Call 10111 (South Africa Police) or 112 from mobile.</p>
+            <p><b>Call 10111  or 112 from mobile.</b></p>
             <button class="primary" onclick="alert('Calling emergency...')">Call Now</button>
           </div>
           <div class="card">
             <h3>Counselling</h3>
-            <p>Talk to a licensed counsellor for trauma or anxiety support.</p>
-            <button class="ghost">Chat with Counsellor</button>
+            <p><b>Talk to a licensed counsellor for trauma or anxiety support.</b> <ul>
+              <li>Explain that counselling offers a safe, confidential space for survivors to speak openly about their experiences.</li>
+           <li> Emphasize emotional healing, trauma recovery, and rebuilding self-esteem.</li>
+           <li> Include both in-person and online counselling options.</li>
+              <li>Provide links to mental wellness articles, self-help exercises, and guided meditations.</li>
+
+         <li> Include helpline contacts for emergency mental health support (local and national).</li>
+          </ul></p>
+            <button class="primary"><a href="tel:+27719657228">Chat with Counsellor</a></button>
           </div>
           <div class="card">
             <h3>Legal Help</h3>
-            <p>Free legal aid for victims of harassment and abuse.</p>
-            <button class="ghost">Contact Legal Advisor</button>
+            <p><b>Free legal aid for victims of harassment and abuse.</b>
+              <ul>
+                <li>Assistance with reporting cases of gender-based violence, assault, or harassment.</li>
+
+                  <li>Guidance on filing protection orders (restraining orders) to ensure safety.</li>
+
+              <li>Legal representation in court for survivors who cannot afford private lawyers.</li>
+
+            <li>Support in lodging police reports and understanding your legal rights during the process.</li>
+                <li>Help with documentation and evidence collection (e.g., medical reports, witness statements).</li>
+            <li> Confidential consultations with trained legal professionals experienced in GBV cases.</li>
+             <li> Information on workplace harassment laws and how to file complaints.</li>
+             <li>Access to free or low-cost paralegal services for rural and vulnerable communities.</li> 
+             <li>Referrals to government or NGO legal services for long-term case support.</li> 
+             <li> Education on your legal rights — understanding what protection the law provides against abuse.</li>
+              <li>Assistance for minors and vulnerable persons through child protection and social workers.</li>
+              <i>Follow-up legal support to ensure justice and survivor safety even after court proceedings.</i>
+              </ul>
+            </p>
+            <button class="primary">Contact Legal Advisor</button>
           </div>
         </div>
       </section>
@@ -277,6 +302,60 @@ datasets:[{label:'Incident Counts',data:[3,2,1,1,4],backgroundColor:'rgba(106,90
 renderReports();
 showMarkers();
   </script>
+
+
+<!-- ================== POWER BUTTON SOS SIMULATION ================== -->
+<section id="powerSOS" class="screen">
+  <h2>Power Button SOS (Simulation)</h2>
+  <p class="lead">In a real mobile app, triple-pressing the power button would trigger an automatic SOS alert.
+  This simulation lets you test that behavior on the web.</p>
+
+  <button id="simulatePower" class="primary">Simulate Triple Power Press</button>
+
+  <div id="powerStatus" class="lead"></div>
+</section>
+
+<script>
+let powerClickCount = 0;
+let lastPowerClickTime = 0;
+
+// Simulate triple-press detection
+document.getElementById('simulatePower').addEventListener('click', async () => {
+  const now = Date.now();
+  if (now - lastPowerClickTime < 800) powerClickCount++;
+  else powerClickCount = 1;
+  lastPowerClickTime = now;
+
+  if (powerClickCount === 3) {
+    powerClickCount = 0;
+    document.getElementById('powerStatus').textContent = 'Triple power press detected! Sending SOS...';
+
+    // Get current location
+    navigator.geolocation.getCurrentPosition(async pos => {
+      const lat = pos.coords.latitude;
+      const lon = pos.coords.longitude;
+
+      // Save report
+      const rep = await createReport({
+        type: 'PowerSOS',
+        description: 'Triggered via triple power press',
+        anonymous: false
+      });
+
+      // Mark user path on map
+      const userMarker = L.marker([lat, lon]).addTo(markerLayer)
+        .bindPopup('<b>Power SOS Triggered</b><br>Location shared.');
+      map.setView([lat, lon], 15);
+
+      document.getElementById('powerStatus').textContent =
+        `SOS sent! Location: ${lat.toFixed(4)}, ${lon.toFixed(4)}`;
+    }, () => {
+      document.getElementById('powerStatus').textContent =
+        'Unable to access location.';
+    });
+  }
+});
+</script>
+
 </body>
 </html>
-
