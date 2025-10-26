@@ -4,138 +4,37 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Create Profile & Login - SafeTap Sphere</title>
-
   <style>
-    /* ============================================
-       SafeTap Sphere — Advanced Auth Styling
-       ============================================ */
-    :root {
-      --primary: #635bff;
-      --primary-dark: #5146f0;
-      --accent: #ff4d6d;
-      --bg-gradient: linear-gradient(135deg, #e8ecff, #ffffff);
-      --glass-bg: rgba(255, 255, 255, 0.55);
-      --text-dark: #1f1f2e;
-      --text-light: #6a6a8a;
-      --radius: 18px;
-      --shadow: 0 10px 35px rgba(0, 0, 0, 0.12);
-      --transition: all 0.3s ease;
-      --font: "Inter", system-ui, sans-serif;
-    }
-html{
-  background-color: #5146f0;
-}
     body {
-      font-family: var(--font);
-      background: var(--bg-gradient);
+      font-family: Inter, system-ui, Arial;
+      background: linear-gradient(180deg, #eef2ff, #ffffff);
       margin: 0;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
-      animation: fadeIn 1s ease forwards;
     }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(15px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
     .container {
-      background: var(--glass-bg);
-      backdrop-filter: blur(16px) saturate(180%);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      width: 380px;
-      padding: 2rem;
-      border: 1px solid rgba(255, 255, 255, 0.25);
-      transition: var(--transition);
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 8px 28px rgba(2, 6, 23, 0.06);
+      width: 360px;
+      padding: 20px;
     }
-
-    .container:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 12px 40px rgba(99, 91, 255, 0.25);
-    }
-
-    h2 {
-      text-align: center;
-      color: var(--primary-dark);
-      margin-bottom: 1.2rem;
-    }
-
-    label {
-      display: block;
-      margin: 10px 0 6px;
-      color: var(--text-dark);
-      font-weight: 600;
-    }
-
-    input {
-      width: 100%;
-      padding: 12px;
-      border: 1px solid #ccc;
-      border-radius: var(--radius);
-      font-size: 1rem;
-      background: rgba(255, 255, 255, 0.8);
-      transition: var(--transition);
-    }
-
-    input:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(99,91,255,0.15);
-      outline: none;
-    }
-
+    h2 { text-align: center; color: #333; }
+    label { display: block; margin: 10px 0 6px; color: #333; font-weight: 500; }
+    input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; }
     button {
-      width: 100%;
-      padding: 12px;
-      border: none;
-      border-radius: 40px;
-      cursor: pointer;
-      background: linear-gradient(90deg, var(--primary-dark), var(--primary));
-      color: white;
-      font-weight: 600;
-      font-size: 1rem;
-      margin-top: 15px;
-      box-shadow: 0 6px 20px rgba(99,91,255,0.25);
-      transition: var(--transition);
+      width: 100%; padding: 10px; border: none; border-radius: 10px;
+      cursor: pointer; background: linear-gradient(90deg, #6a5af9, #7dd3fc);
+      color: white; font-weight: 600; margin-top: 10px;
     }
-
-    button:hover {
-      background: var(--primary);
-      transform: scale(1.03);
-    }
-
-    p {
-      text-align: center;
-      margin-top: 1rem;
-      color: var(--text-light);
-    }
-
-    a {
-      color: var(--primary-dark);
-      text-decoration: none;
-      font-weight: 600;
-      cursor: pointer;
-      transition: color 0.2s ease;
-    }
-
-    a:hover {
-      color: var(--accent);
-    }
-
-    .error {
-      color: var(--accent);
-      font-size: 0.9rem;
-      margin-top: 4px;
-      display: none;
-    }
+    p { text-align: center; margin-top: 10px; color: #555; }
+    a { color: #6a5af9; text-decoration: none; font-weight: 600; cursor: pointer; }
   </style>
 </head>
-
 <body>
 
-  <!-- Create Profile -->
   <div class="container" id="createProfile">
     <h2>Create Profile</h2>
     <form id="profileForm">
@@ -148,30 +47,28 @@ html{
       <label>Password:</label>
       <input type="password" id="pPass" required placeholder="Create a password">
 
-      <label>Confirm Password:</label>
-      <input type="password" id="pConfirm" required placeholder="Re-enter your password">
-      <div id="passwordError" class="error">Passwords do not match.</div>
+      <label>Confirm password:</label>
+      <input type="password" id="loginPass" required placeholder="Re-enter your password">
 
       <label>Phone Number:</label>
-      <input type="text" id="pPhone" required placeholder="e.g. 0123456789" maxlength="10">
-      <div id="phoneError" class="error">Phone number must be 10 digits and start with 0.</div>
+      <input type="text" id="pPhone" required placeholder="+27...">
 
       <button type="submit">Create Profile</button>
     </form>
-    <p>Already have an account? <a id="gotoLogin" ">Login here</a></p>
+    <p>Already have an account? <a id="gotoLogin">Login here</a></p>
   </div>
 
-  <!-- Login Page -->
   <div class="container" id="loginPage" style="display:none;">
     <h2>Login</h2>
     <form id="loginForm">
       <label>Email:</label>
       <input type="email" id="loginEmail" required placeholder="Enter your email">
-
       <label>Password:</label>
       <input type="password" id="loginPass" required placeholder="Enter your password">
+      
+      <button type="button" onclick="location.href='/FNB Hackerthon/safe.html'">Login</button>
 
-      <button type="submit"><a href="safe.html">Login</a></button>
+      
     </form>
     <p>Don’t have a profile? <a id="gotoCreate">Create one</a></p>
   </div>
@@ -181,10 +78,8 @@ html{
 
     const createProfile = document.getElementById("createProfile");
     const loginPage = document.getElementById("loginPage");
-    const passwordError = document.getElementById("passwordError");
-    const phoneError = document.getElementById("phoneError");
 
-    // Switch between Create and Login
+    // Switch between pages
     document.getElementById("gotoLogin").onclick = () => {
       createProfile.style.display = "none";
       loginPage.style.display = "block";
@@ -194,62 +89,35 @@ html{
       createProfile.style.display = "block";
     };
 
-    // Create Profile Validation
+    // Handle profile creation
     document.getElementById("profileForm").onsubmit = e => {
       e.preventDefault();
-
-      const name = document.getElementById("pName").value.trim();
-      const email = document.getElementById("pEmail").value.trim();
-      const pass = document.getElementById("pPass").value;
-      const confirm = document.getElementById("pConfirm").value;
-      const phone = document.getElementById("pPhone").value.trim();
-
-      let valid = true;
-
-      // Password match validation
-      if (pass !== confirm) {
-        passwordError.style.display = "block";
-        valid = false;
-      } else {
-        passwordError.style.display = "none";
-      }
-
-      // Phone validation (10 digits, starts with 0)
-      const phonePattern = /^0\d{9}$/;
-      if (!phonePattern.test(phone)) {
-        phoneError.style.display = "block";
-        valid = false;
-      } else {
-        phoneError.style.display = "none";
-      }
-
-      if (!valid) return;
-
-      // Save profile
-      const user = { name, email, pass, phone };
+      const user = {
+        name: document.getElementById("pName").value,
+        email: document.getElementById("pEmail").value,
+        pass: document.getElementById("pPass").value,
+        phone: document.getElementById("pPhone").value
+      };
       localStorage.setItem(PROFILE_KEY, JSON.stringify(user));
-
-      alert(" Profile created successfully! Please log in.");
+      alert("Profile created successfully! Please log in.");
       createProfile.style.display = "none";
       loginPage.style.display = "block";
     };
 
-    // Login Validation
+    // Handle login
     document.getElementById("loginForm").onsubmit = e => {
       e.preventDefault();
-
       const stored = JSON.parse(localStorage.getItem(PROFILE_KEY));
-      const email = document.getElementById("loginEmail").value.trim();
+      const email = document.getElementById("loginEmail").value;
       const pass = document.getElementById("loginPass").value;
 
-      if (!stored) return alert("⚠️ No profile found. Please create one first.");
-
+      if (!stored) return alert("No profile found. Please create one first.");
       if (stored.email === email && stored.pass === pass) {
         localStorage.setItem("safetap_logged_in", "true");
-        alert(" Login successful!");
-        window.location.href = "safetap.html"; // redirect to main app
+        alert("Login successful!");
+        window.location.href = "safetap.html"; // Redirect to the main SafeTap app
       } else {
-        alert(" Invalid credentials. Please try again.");
+        alert("Invalid credentials. Please try again.");
       }
     };
   </script>
