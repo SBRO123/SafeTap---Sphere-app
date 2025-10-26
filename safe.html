@@ -302,5 +302,60 @@ datasets:[{label:'Incident Counts',data:[3,2,1,1,4],backgroundColor:'rgba(106,90
 renderReports();
 showMarkers();
   </script>
+
+
+<!-- ================== POWER BUTTON SOS SIMULATION ================== -->
+<section id="powerSOS" class="screen">
+  <h2>Power Button SOS (Simulation)</h2>
+  <p class="lead">In a real mobile app, triple-pressing the power button would trigger an automatic SOS alert.
+  This simulation lets you test that behavior on the web.</p>
+
+  <button id="simulatePower" class="primary">Simulate Triple Power Press</button>
+
+  <div id="powerStatus" class="lead"></div>
+</section>
+
+<script>
+let powerClickCount = 0;
+let lastPowerClickTime = 0;
+
+// Simulate triple-press detection
+document.getElementById('simulatePower').addEventListener('click', async () => {
+  const now = Date.now();
+  if (now - lastPowerClickTime < 800) powerClickCount++;
+  else powerClickCount = 1;
+  lastPowerClickTime = now;
+
+  if (powerClickCount === 3) {
+    powerClickCount = 0;
+    document.getElementById('powerStatus').textContent = 'Triple power press detected! Sending SOS...';
+
+    // Get current location
+    navigator.geolocation.getCurrentPosition(async pos => {
+      const lat = pos.coords.latitude;
+      const lon = pos.coords.longitude;
+
+      // Save report
+      const rep = await createReport({
+        type: 'PowerSOS',
+        description: 'Triggered via triple power press',
+        anonymous: false
+      });
+
+      // Mark user path on map
+      const userMarker = L.marker([lat, lon]).addTo(markerLayer)
+        .bindPopup('<b>Power SOS Triggered</b><br>Location shared.');
+      map.setView([lat, lon], 15);
+
+      document.getElementById('powerStatus').textContent =
+        `SOS sent! Location: ${lat.toFixed(4)}, ${lon.toFixed(4)}`;
+    }, () => {
+      document.getElementById('powerStatus').textContent =
+        'Unable to access location.';
+    });
+  }
+});
+</script>
+
 </body>
 </html>
