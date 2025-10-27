@@ -690,7 +690,7 @@ datasets:[{label:'Incident Counts',data:[3,2,1,1,4],backgroundColor:'rgba(106,90
 
 // Community functions
 async function loadCommunityData() {
-  const reports = await loadReportsFromAPI();
+  const reports = loadReports(); // Use local reports instead of API
   
   // Update stats
   document.getElementById('totalReports').textContent = reports.length;
