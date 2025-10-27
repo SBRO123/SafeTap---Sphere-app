@@ -421,20 +421,21 @@ $('#sosBtnLarge').onclick=async()=>{
     const sosResult = await triggerSOSAlert(lat, lon, 'Emergency SOS activated');
     
     if (sosResult.success) {
-      $('#sosStatus').innerHTML=`<div style="color: var(--success); font-weight: 600;">✅ SOS Alert Sent Successfully</div><p style="font-size: 0.9rem; color: var(--muted); margin-top: 8px;">Alert ID: ${sosResult.alert.id} | Location: ${location}</p>`;
+      $('#sosStatus').innerHTML=`<div style="color: var(--success); font-weight: 600;">✅ SOS Alert Sent Successfully</div><p style="font-size: 0.9rem; color: var(--muted); margin-top: 8px;">Alert ID: ${sosResult.alert?.id || 'Backend'} | Location: ${location}</p>`;
       showNotification('success', 'SOS Alert Sent!', `Emergency alert sent to trusted contacts. Location: ${location}`);
     } else {
       throw new Error(sosResult.error || 'SOS failed');
     }
   } catch (error) {
+    console.log('Backend failed, using fallback:', error);
     // Fallback to local storage
     const r = await createReport({type:'SOS',description:'Emergency SOS activated',anonymous:false});
     const trustedContact = localStorage.getItem('trustedContact');
     if(trustedContact) {
-      await sendEmergencySMS(trustedContact, r.lat, r.lon, r.location);
+      await sendEmergencySMS(trustedContact, r.lat || lat, r.lon || lon, r.location || location);
     }
-    $('#sosStatus').innerHTML=`<div style="color: var(--success); font-weight: 600;">✅ SOS Alert Sent (Local)</div><p style="font-size: 0.9rem; color: var(--muted); margin-top: 8px;">Alert ID: ${r.id} | Location: ${r.location}</p>`;
-    showNotification('warning', 'SOS Alert Sent (Offline)', `Emergency alert logged locally. Location: ${r.location}`);
+    $('#sosStatus').innerHTML=`<div style="color: var(--success); font-weight: 600;">✅ SOS Alert Sent (Offline)</div><p style="font-size: 0.9rem; color: var(--muted); margin-top: 8px;">Alert ID: ${r.id || Date.now()} | Location: ${r.location || location}</p>`;
+    showNotification('warning', 'SOS Alert Sent (Offline)', `Emergency alert logged locally. Location: ${r.location || location}`);
   }
   
   loadCommunityData();
@@ -612,7 +613,7 @@ async function sendEmergencySMS(phoneNumber, lat, lon, location) {
       console.log('Geocoding failed');
     }
     
-    const response = await fetch(`${window.location.hostname === 'localhost' ? 'http://localhost:3001' : 'https://safetap-backend.up.railway.app'}/api/send-sms`, {
+    const response = await fetch(`${window.location.hostname === 'localhost' ? 'http://localhost:3001' : 'https://safetap-sphere-app-production.up.railway.app'}/api/send-sms`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
