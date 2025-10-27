@@ -38,13 +38,17 @@ export const register = async (req, res) => {
     
     if (error) throw error;
     
-    // Create user profile
+    // Try to create user profile, but don't fail if table doesn't exist
     if (data.user) {
-      await supabase.from('users').insert([{
-        id: data.user.id,
-        full_name: fullName,
-        trusted_contact: trustedContact
-      }]);
+      try {
+        await supabase.from('users').insert([{
+          id: data.user.id,
+          full_name: fullName,
+          trusted_contact: trustedContact
+        }]);
+      } catch (dbError) {
+        console.log('User profile creation failed, but auth succeeded:', dbError.message);
+      }
     }
     
     res.json({ success: true, user: data.user });
