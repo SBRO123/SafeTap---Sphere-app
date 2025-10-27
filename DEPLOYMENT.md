@@ -8,11 +8,11 @@
 4. **Select** `backend` folder as root directory
 5. **Add Environment Variables**:
    ```
-   SUPABASE_URL=https://piehnpwdjwmklbtoehgk.supabase.co
-   SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBpZWhucHdkandta2xidG9laGdrIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc2MTM3MjA0MCwiZXhwIjoyMDc2OTQ4MDQwfQ.VIgelMkLzrP_3qenzf7C7Gkl4UadHbwF5vlt-ubbR-o
-   TWILIO_ACCOUNT_SID=ACdf61d52173acf5d8546b3b0974a59463
-   TWILIO_AUTH_TOKEN=5c783ac7db80fc261f949a0c6fb7b7ab
-   TWILIO_PHONE_NUMBER=+17163095817
+   SUPABASE_URL=your_supabase_url
+   SUPABASE_SERVICE_ROLE_KEY=your_supabase_key
+   TWILIO_ACCOUNT_SID=your_twilio_sid
+   TWILIO_AUTH_TOKEN=your_twilio_token
+   TWILIO_PHONE_NUMBER=your_twilio_number
    PORT=3001
    ```
 6. **Deploy** - Railway will auto-deploy
