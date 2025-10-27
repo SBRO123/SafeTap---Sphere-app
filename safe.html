@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <title>SafeTap Sphere — Hackathon </title>
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin=""/>
+
   <link rel="stylesheet" href="safeStyling.css">
 </head>
 <body>
@@ -14,6 +14,7 @@
       <button data-screen="sos">SOS</button>
       <button data-screen="map">MAP</button>
       <button data-screen="report">REPORT</button>
+      <button data-screen="community">COMMUNITY</button>
       <button data-screen="support">SUPPORT</button>
       <button data-screen="education">EDUCATION</button>
       <button data-screen="admin">ADMIN</button>
@@ -51,23 +52,27 @@
 
       
       <section id="sos" class="screen" style="text-align: center; background: linear-gradient(135deg, #fee2e2, #d5c1c1);">
-        <h2>SOS Activation</h2>
-        <p>Press the big button below to send an emergency alert.</p>
-        <button id="sosBtnLarge" class="sos-large">SEND SOS</button>
+        <h2>🆘 Emergency SOS</h2>
+        <p>Press and hold the button below to send an emergency alert to your trusted contacts.</p>
+        <div style="margin: 40px 0;">
+          <button id="sosBtnLarge" class="sos-round">SOS</button>
+        </div>
         <div id="sosStatus" class="lead"></div>
+        <p style="color: var(--muted); font-size: 0.9rem; margin-top: 20px;">Emergency services: 10111 | Medical: 112</p>
       </section>
 
      
       <section id="mapScreen" class="screen" style="text-align: center; background: linear-gradient(135deg, #fee2e2, #d5c1c1);">
         <h2>Live Map & Safety Zones</h2>
-        <div class="controls">
-          <button id="showMarkers">Show Markers</button>
-          <button id="showHeat">Show Heatmap</button>
-          <button id="clearReports">Clear Reports</button>
+        <div class="controls" style="display: flex; gap: 8px; justify-content: center; margin-bottom: 16px; flex-wrap: wrap;">
+          <button id="showMarkers" class="ghost" style="padding: 8px 16px;">Show Reports</button>
+          <button id="showHeat" class="ghost" style="padding: 8px 16px;">Show Heatmap</button>
+          <button id="showSafetyZones" class="primary" style="padding: 8px 16px;">Safety Zones</button>
+          <button id="clearReports" class="ghost" style="padding: 8px 16px; color: #ef4444;">Clear Reports</button>
         </div>
-        <div id="mapContainer">
-          <div id="map"></div>
-          <pre id="reportsPre" class="reportsPre">No reports yet.</pre>
+        <div id="mapContainer" style="margin: 20px 0;">
+          <div id="map" style="height: 400px; width: 100%; border: 2px solid #ccc; border-radius: 12px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);"></div>
+          <div id="reportsPre" class="reportsPre">No reports yet.</div>
         </div>
       </section>
 
@@ -95,6 +100,59 @@
           </div>
         </form>
         <div id="reportStatus" class="lead"></div>
+      </section>
+
+      <section id="community" class="screen" style="text-align: center; background: linear-gradient(135deg, #fee2e2, #d5c1c1);">
+        <h2>🌍 Sphere's Community</h2>
+        <p class="lead">Stay connected with your community's safety updates and resources</p>
+        
+        <div class="card-grid" style="margin-bottom: 32px;">
+          <div class="card">
+            <h3>📊 Recent Reports</h3>
+            <div id="recentReports" style="text-align: left; max-height: 200px; overflow-y: auto;">
+              <p style="color: #666; font-style: italic;">Loading recent community reports...</p>
+            </div>
+            <button class="ghost" onclick="document.querySelector('[data-screen="map"]').click()">View Full Map</button>
+          </div>
+          
+          <div class="card">
+            <h3>📚 Education Hub</h3>
+            <p><b>Quick Access to Safety Resources</b></p>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <button class="ghost" onclick="window.open('https://www.youtube.com/results?search_query=know+your+rights+south+africa+safety', '_blank')">Know Your Rights</button>
+              <button class="ghost" onclick="window.open('https://www.youtube.com/results?search_query=self+defense+tips+for+women', '_blank')">Self-Defence Tips</button>
+              <button class="ghost" onclick="window.open('https://www.youtube.com/results?search_query=mental+health+support+after+trauma', '_blank')">Mental Health Support</button>
+            </div>
+          </div>
+          
+          <div class="card">
+            <h3>🆘 Support Network</h3>
+            <p><b>Get Help When You Need It</b></p>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <button class="primary" onclick="alert('Calling 10111...')">Emergency Hotline</button>
+              <button class="ghost" onclick="window.open('https://www.sadag.org/', '_blank')">Counselling Services</button>
+              <button class="ghost" onclick="window.open('https://share.google/38K5wp95q0QbU0jSM', '_blank')">Legal Aid</button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card" style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(240, 147, 251, 0.1)); border: 2px solid rgba(102, 126, 234, 0.2);">
+          <h3>💪 Community Stats</h3>
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; text-align: center;">
+            <div>
+              <div id="totalReports" style="font-size: 2rem; font-weight: bold; color: var(--accent-1);">0</div>
+              <div style="font-size: 0.9rem; color: #666;">Total Reports</div>
+            </div>
+            <div>
+              <div id="totalAlerts" style="font-size: 2rem; font-weight: bold; color: var(--danger);">0</div>
+              <div style="font-size: 0.9rem; color: #666;">SOS Alerts</div>
+            </div>
+            <div>
+              <div id="activeUsers" style="font-size: 2rem; font-weight: bold; color: var(--accent-2);">1</div>
+              <div style="font-size: 0.9rem; color: #666;">Active Users</div>
+            </div>
+          </div>
+        </div>
       </section>
 
       
@@ -174,7 +232,7 @@
 <li>Keep your location sharing on in the SafeTap app when walking alone at night.</li>
 </ul>
 <i> Self-defence is about protection, not violence — use it only to escape danger.</i></p></div>
-          <br>
+          
           <div class="card"><h3>Mental Health</h3><p><b>Emotional Healing and Support After GBV</b> 
 <ul>
 <li>It’s normal to feel fear, anger, shame, or confusion — you are not alone.</li>
@@ -216,7 +274,7 @@
         <label>Trusted Contact:
           <input type="text" id="trustedContact" placeholder="+27..." />
         </label>
-        <button class="primary" onclick="alert('Settings saved!')">Save Settings</button>
+        <button class="primary" onclick="saveSettings()">Save Settings</button>
       </section>
     </main>
 
@@ -225,45 +283,162 @@
     </footer>
   </div>
 
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-  <script src="https://unpkg.com/leaflet.heat/dist/leaflet-heat.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="api-integration.js"></script>
 
   <script>
+// Check if user is logged in
+if (!localStorage.getItem('safetap_logged_in')) {
+  window.location.href = 'Safetap.html';
+}
 const $ = s => document.querySelector(s);
 const $$ = s => document.querySelectorAll(s);
 const STORAGE_KEY = "safetap_reports_v1";
 
-// Navigation
+// Navigation with smooth transitions
 $$('.topnav button').forEach(btn=>{
   btn.addEventListener('click',()=>{
     $$('.topnav button').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
-    $$('.screen').forEach(sec=>sec.classList.remove('active'));
-    const id = btn.dataset.screen === 'map' ? 'mapScreen' : btn.dataset.screen;
-    $('#'+id).classList.add('active');
+    
+    // Fade out current screen
+    const currentScreen = $('.screen.active');
+    if(currentScreen) {
+      currentScreen.style.opacity = '0';
+      currentScreen.style.transform = 'translateX(-20px)';
+      setTimeout(() => {
+        $$('.screen').forEach(sec=>sec.classList.remove('active'));
+        const id = btn.dataset.screen === 'map' ? 'mapScreen' : btn.dataset.screen;
+        const newScreen = $('#'+id);
+        newScreen.classList.add('active');
+        
+        // Trigger reflow and fade in
+        setTimeout(() => {
+          newScreen.style.opacity = '1';
+          newScreen.style.transform = 'translateX(0)';
+        }, 50);
+      }, 200);
+    } else {
+      $$('.screen').forEach(sec=>sec.classList.remove('active'));
+      const id = btn.dataset.screen === 'map' ? 'mapScreen' : btn.dataset.screen;
+      $('#'+id).classList.add('active');
+    }
   });
 });
 
 // Storage & reports
 function loadReports(){return JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]");}
 function saveReports(r){localStorage.setItem(STORAGE_KEY,JSON.stringify(r));}
-function renderReports(){const pre=$('#reportsPre');const r=loadReports();pre.textContent=r.length?JSON.stringify(r,null,2):'No reports yet.';}
+function renderReports(){
+  const pre=$('#reportsPre');
+  const r=loadReports();
+  if(r.length===0){
+    pre.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted);"><h3>📋 No Reports Yet</h3><p>Be the first to contribute to community safety!</p></div>';
+  }else{
+    pre.innerHTML=r.map(rep=>{
+      const time=new Date(rep.ts).toLocaleString();
+      const typeIcon=rep.type==='SOS'?'🆘':rep.type==='harassment'?'⚠️':rep.type==='theft'?'🚨':rep.type==='violence'?'🔴':'📝';
+      return `<div class="report-item">
+        <div class="report-header">
+          <span class="report-type">${typeIcon} ${rep.type.toUpperCase()}</span>
+          <span class="report-location">📍 ${rep.location||'Unknown'}</span>
+        </div>
+        <div class="report-description">${rep.description}</div>
+        <div class="report-time">⏰ ${time}</div>
+      </div>`;
+    }).join('');
+  }
+}
 
 async function createReport({type,description,anonymous}){
-  let lat=-33.9,lon=18.4;
-  try{const pos=await new Promise((res,rej)=>navigator.geolocation.getCurrentPosition(res,rej,{timeout:3000}));
+  let lat=cities['Johannesburg'][0], lon=cities['Johannesburg'][1], location='Johannesburg';
+  try{
+    const pos=await new Promise((res,rej)=>navigator.geolocation.getCurrentPosition(res,rej,{timeout:3000}));
     lat=pos.coords.latitude;lon=pos.coords.longitude;
+    location=getNearestCity(lat,lon);
   }catch{}
-  const rep={id:Date.now(),type,description,anonymous,lat,lon,ts:new Date().toISOString()};
-  const arr=loadReports();arr.push(rep);saveReports(arr);renderReports();return rep;
+  
+  // Try API first, fallback to localStorage
+  try {
+    const apiReport = await saveReportToAPI({type,description,anonymous,lat,lon});
+    renderReports();
+    return apiReport;
+  } catch (error) {
+    // Fallback to localStorage
+    const rep={id:Date.now(),type,description,anonymous,lat,lon,location,ts:new Date().toISOString()};
+    const arr=loadReports();arr.push(rep);saveReports(arr);renderReports();return rep;
+  }
+}
+
+function getNearestCity(lat,lon){
+  let nearest='Johannesburg',minDist=Infinity;
+  Object.entries(cities).forEach(([name,[clat,clon]])=>{
+    const dist=Math.sqrt((lat-clat)**2+(lon-clon)**2);
+    if(dist<minDist){minDist=dist;nearest=name;}
+  });
+  return nearest;
 }
 
 // SOS + Quick Triggers
-$('#quickSOS').onclick=()=>{createReport({type:'SOS',description:'Quick SOS',anonymous:true});alert('Quick SOS recorded!');};
-$('#simulateTap').onclick=()=>{createReport({type:'Tap',description:'Tap trigger',anonymous:true});alert('Tap simulated');};
-$('#simulateShake').onclick=()=>{createReport({type:'Shake',description:'Shake simulated',anonymous:true});alert('Shake simulated');};
-$('#sosBtnLarge').onclick=async()=>{$('#sosStatus').textContent='Sending SOS...';const r=await createReport({type:'SOS',description:'SOS activated',anonymous:false});$('#sosStatus').textContent='SOS logged ID '+r.id;};
+$('#quickSOS').onclick=()=>{createReport({type:'SOS',description:'Quick SOS',anonymous:true});showNotification('success', 'Quick SOS Activated!', 'Emergency alert has been logged anonymously.');};
+$('#simulateTap').onclick=()=>{createReport({type:'Tap',description:'Tap trigger',anonymous:true});showNotification('warning', 'Tap Detection', 'Emergency tap sequence detected and logged.');};
+$('#simulateShake').onclick=()=>{createReport({type:'Shake',description:'Shake simulated',anonymous:true});showNotification('warning', 'Shake Detection', 'Device shake pattern detected and logged.');};
+// Notification system
+function showNotification(type, title, message) {
+  const notification = document.createElement('div');
+  notification.className = `notification ${type}`;
+  notification.innerHTML = `
+    <div class="notification-header">
+      <span>${type === 'success' ? '✅' : type === 'error' ? '❌' : type === 'warning' ? '⚠️' : 'ℹ️'}</span>
+      <strong>${title}</strong>
+    </div>
+    <div class="notification-body">${message}</div>
+  `;
+  
+  document.body.appendChild(notification);
+  
+  setTimeout(() => notification.classList.add('show'), 100);
+  
+  setTimeout(() => {
+    notification.classList.remove('show');
+    setTimeout(() => document.body.removeChild(notification), 400);
+  }, 4000);
+}
+
+$('#sosBtnLarge').onclick=async()=>{
+  $('#sosStatus').innerHTML='<div style="color: var(--danger); font-weight: 600;">🚨 Sending Emergency Alert...</div>';
+  
+  try {
+    // Get current location
+    const pos = await new Promise((res,rej)=>navigator.geolocation.getCurrentPosition(res,rej,{timeout:5000}));
+    const lat = pos.coords.latitude;
+    const lon = pos.coords.longitude;
+    const location = getNearestCity(lat, lon);
+    
+    // Use backend SOS if available
+    const sosResult = await triggerSOSAlert(lat, lon, 'Emergency SOS activated');
+    
+    if (sosResult.success) {
+      $('#sosStatus').innerHTML=`<div style="color: var(--success); font-weight: 600;">✅ SOS Alert Sent Successfully</div><p style="font-size: 0.9rem; color: var(--muted); margin-top: 8px;">Alert ID: ${sosResult.alert.id} | Location: ${location}</p>`;
+      showNotification('success', 'SOS Alert Sent!', `Emergency alert sent to trusted contacts. Location: ${location}`);
+    } else {
+      throw new Error(sosResult.error || 'SOS failed');
+    }
+  } catch (error) {
+    // Fallback to local storage
+    const r = await createReport({type:'SOS',description:'Emergency SOS activated',anonymous:false});
+    const trustedContact = localStorage.getItem('trustedContact');
+    if(trustedContact) {
+      await sendEmergencySMS(trustedContact, r.lat, r.lon, r.location);
+    }
+    $('#sosStatus').innerHTML=`<div style="color: var(--success); font-weight: 600;">✅ SOS Alert Sent (Local)</div><p style="font-size: 0.9rem; color: var(--muted); margin-top: 8px;">Alert ID: ${r.id} | Location: ${r.location}</p>`;
+    showNotification('warning', 'SOS Alert Sent (Offline)', `Emergency alert logged locally. Location: ${r.location}`);
+  }
+  
+  loadCommunityData();
+};
 
 // Report Form
 $('#reportForm').onsubmit=async e=>{
@@ -274,25 +449,111 @@ $('#reportForm').onsubmit=async e=>{
   $('#rDesc').value='';
 };
 
-// Map + Heatmap
-const map=L.map('map').setView([-33.9258,18.4233],13);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19}).addTo(map);
-let markerLayer=L.layerGroup().addTo(map),heatLayer=null;
+// Leaflet Map - South Africa focused
+let map, markerLayer, safetyZones;
 
-function showMarkers(){
+// City coordinates for South Africa
+const cities = {
+  'Johannesburg': [-26.2041, 28.0473],
+  'Cape Town': [-33.9249, 18.4241],
+  'Durban': [-29.8587, 31.0218],
+  'Pretoria': [-25.7479, 28.2293],
+  'Sandton': [-26.1076, 28.0567],
+  'Soweto': [-26.2678, 27.8546]
+};
+
+// Initialize map with better tile server
+map = L.map('map').setView(cities['Johannesburg'], 10);
+L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  maxZoom: 18,
+  attribution: '© OpenStreetMap'
+}).addTo(map);
+
+markerLayer = L.layerGroup().addTo(map);
+safetyZones = L.layerGroup().addTo(map);
+
+// South African Safety Zones with city names
+const safetyZoneData = [
+  {name: 'Sandton', coords: cities['Sandton'], safety: 'Safe Zone', color: 'green'},
+  {name: 'Cape Town CBD', coords: cities['Cape Town'], safety: 'Safe Zone', color: 'green'},
+  {name: 'Durban Beachfront', coords: cities['Durban'], safety: 'Caution Zone', color: 'orange'},
+  {name: 'Pretoria Central', coords: cities['Pretoria'], safety: 'Caution Zone', color: 'orange'},
+  {name: 'Soweto', coords: cities['Soweto'], safety: 'High Alert Zone', color: 'red'},
+  {name: 'Johannesburg CBD', coords: cities['Johannesburg'], safety: 'High Alert Zone', color: 'red'}
+];
+
+// Add safety zone circles
+safetyZoneData.forEach(zone => {
+  const circle = L.circle(zone.coords, {
+    color: zone.color,
+    fillColor: zone.color,
+    fillOpacity: 0.3,
+    radius: 3000
+  }).bindPopup(`<b>${zone.name}</b><br>${zone.safety}`);
+  safetyZones.addLayer(circle);
+});
+
+async function showMarkers(){
   markerLayer.clearLayers();
-  const r=loadReports();
-  r.forEach(x=>L.marker([x.lat,x.lon]).bindPopup('<b>'+x.type+'</b><br>'+x.description).addTo(markerLayer));
+  
+  // Load reports from API
+  const r = await loadReportsFromAPI();
+  
+  for(const x of r) {
+    // Get AI risk analysis for each report location
+    const riskData = await analyzeRisk(x.latitude || x.lat, x.longitude || x.lon);
+    
+    const marker = L.marker([x.latitude || x.lat, x.longitude || x.lon])
+      .bindPopup(`
+        <div style="min-width: 200px;">
+          <b>${x.type}</b><br>
+          ${x.description}<br>
+          <small>📍 ${x.location||'Unknown Location'}</small><br>
+          <div style="margin-top: 8px; padding: 6px; background: ${riskData.riskLevel === 'high' ? '#fee2e2' : riskData.riskLevel === 'medium' ? '#fef3c7' : '#f0fdf4'}; border-radius: 4px;">
+            <strong>Risk Level: ${riskData.riskLevel.toUpperCase()}</strong><br>
+            <small>${riskData.recommendations?.[0] || 'Stay alert'}</small>
+          </div>
+        </div>
+      `)
+      .addTo(markerLayer);
+  }
+  
   if(r.length) map.fitBounds(markerLayer.getBounds());
 }
+
 function showHeat(){
-  if(heatLayer) map.removeLayer(heatLayer);
-  const pts=loadReports().map(x=>[x.lat,x.lon,0.6]);
-  heatLayer=L.heatLayer(pts,{radius:25}).addTo(map);
+  // Simple heatmap simulation with colored circles
+  markerLayer.clearLayers();
+  const r=loadReports();
+  r.forEach(x => {
+    L.circle([x.lat, x.lon], {
+      color: 'red',
+      fillColor: '#f03',
+      fillOpacity: 0.5,
+      radius: 500
+    }).bindPopup(`<b>${x.type}</b><br>${x.description}`).addTo(markerLayer);
+  });
 }
 $('#showMarkers').onclick=showMarkers;
 $('#showHeat').onclick=showHeat;
-$('#clearReports').onclick=()=>{localStorage.removeItem(STORAGE_KEY);markerLayer.clearLayers();if(heatLayer)map.removeLayer(heatLayer);renderReports();};
+
+let safetyZonesVisible = true;
+$('#showSafetyZones').onclick=()=>{
+  if(safetyZonesVisible){
+    map.removeLayer(safetyZones);
+    $('#showSafetyZones').textContent='Safety Zones';
+  }else{
+    map.addLayer(safetyZones);
+    $('#showSafetyZones').textContent='Hide Zones';
+  }
+  safetyZonesVisible = !safetyZonesVisible;
+};
+
+$('#clearReports').onclick=()=>{
+  localStorage.removeItem(STORAGE_KEY);
+  markerLayer.clearLayers();
+  renderReports();
+};
 
 // Voice Recognition
 let recognition;
@@ -309,14 +570,120 @@ if('webkitSpeechRecognition' in window){
 }
 $('#startVoice').onclick=()=>{if(recognition){recognition.start();alert('Listening... say "Help me"');}else alert('Voice recognition not supported');};
 
+// Settings functions
+function saveSettings() {
+  const lang = $('#langSelect').value;
+  const alertMethod = $('#alertMethod').value;
+  const trustedContact = $('#trustedContact').value;
+  
+  if(trustedContact && !trustedContact.match(/^\+27[0-9]{9}$/)) {
+    showNotification('error', 'Invalid Number', 'Please enter a valid South African number (+27xxxxxxxxx)');
+    return;
+  }
+  
+  localStorage.setItem('preferredLanguage', lang);
+  localStorage.setItem('alertMethod', alertMethod);
+  localStorage.setItem('trustedContact', trustedContact);
+  
+  showNotification('success', 'Settings Saved!', `Trusted contact: ${trustedContact || 'None set'}`);
+}
+
+// Load saved settings
+function loadSettings() {
+  const lang = localStorage.getItem('preferredLanguage') || 'English';
+  const alertMethod = localStorage.getItem('alertMethod') || 'Push Notification';
+  const trustedContact = localStorage.getItem('trustedContact') || '';
+  
+  $('#langSelect').value = lang;
+  $('#alertMethod').value = alertMethod;
+  $('#trustedContact').value = trustedContact;
+}
+
+// Send emergency SMS
+async function sendEmergencySMS(phoneNumber, lat, lon, location) {
+  try {
+    // Get detailed location info
+    let cityName = location;
+    try {
+      const response = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`);
+      const data = await response.json();
+      cityName = data.city || data.locality || data.principalSubdivision || location;
+    } catch (e) {
+      console.log('Geocoding failed');
+    }
+    
+    const response = await fetch(`${window.location.hostname === 'localhost' ? 'http://localhost:3001' : 'https://safetap-backend.up.railway.app'}/api/send-sms`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        to: phoneNumber,
+        message: `🚨 SafeTap Emergency Alert 🚨\nCity: ${cityName}\nGoogle Maps: https://maps.google.com/?q=${lat},${lon}\nTime: ${new Date().toLocaleString()}\nThis is an automated emergency message.`
+      })
+    });
+    
+    const result = await response.json();
+    if(!response.ok) throw new Error(result.error || 'SMS failed');
+    showNotification('success', 'SMS Sent!', `Emergency SMS sent to ${phoneNumber}`);
+  } catch(error) {
+    console.error('SMS Error:', error);
+    showNotification('warning', 'SMS Failed', `Could not send SMS: ${error.message}`);
+  }
+}
+
 // Admin Dashboard Chart
 const ctx=document.getElementById('chart');
 const chart=new Chart(ctx,{type:'bar',data:{labels:['SOS','Tap','Shake','Voice','Report'],
 datasets:[{label:'Incident Counts',data:[3,2,1,1,4],backgroundColor:'rgba(106,90,249,0.6)'}]},options:{plugins:{legend:{display:false}}}});
 
+// Community functions
+async function loadCommunityData() {
+  const reports = await loadReportsFromAPI();
+  
+  // Update stats
+  document.getElementById('totalReports').textContent = reports.length;
+  document.getElementById('totalAlerts').textContent = reports.filter(r => r.type === 'SOS').length;
+  
+  // Show recent reports with improved formatting
+  const recentDiv = document.getElementById('recentReports');
+  if (reports.length === 0) {
+    recentDiv.innerHTML = '<p style="color: #666; font-style: italic; text-align: center; padding: 20px;">📋 No reports yet.<br>Be the first to contribute to community safety!</p>';
+  } else {
+    const recent = reports.slice(-5).reverse(); // Show 5 most recent
+    recentDiv.innerHTML = recent.map(r => {
+      const time = new Date(r.ts).toLocaleDateString();
+      const typeIcon = r.type === 'SOS' ? '🆘' : r.type === 'harassment' ? '⚠️' : r.type === 'theft' ? '🚨' : r.type === 'violence' ? '🔴' : '📝';
+      const anonymousLabel = r.anonymous ? '👤 Anonymous' : '👤 User Report';
+      return `<div style="padding: 12px; border-left: 4px solid var(--accent-1); margin: 10px 0; background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(240, 147, 251, 0.05)); border-radius: 8px; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.1)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+          <strong style="color: var(--accent-1);">${typeIcon} ${r.type.toUpperCase()}</strong>
+          <small style="background: rgba(102, 126, 234, 0.1); padding: 2px 6px; border-radius: 4px; font-size: 0.8rem;">📍 ${r.location || 'Unknown'}</small>
+        </div>
+        <div style="color: #374151; margin-bottom: 6px;">${r.description.substring(0, 80)}${r.description.length > 80 ? '...' : ''}</div>
+        <div style="display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--muted);">
+          <span>⏰ ${time}</span>
+          <span>${anonymousLabel}</span>
+        </div>
+      </div>`;
+    }).join('');
+  }
+}
+
+// Update data when switching tabs
+$$('.topnav button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (btn.dataset.screen === 'community') {
+      loadCommunityData();
+    } else if (btn.dataset.screen === 'settings') {
+      loadSettings();
+    }
+  });
+});
+
 // Init
 renderReports();
 showMarkers();
+loadCommunityData();
+loadSettings();
   </script>
 
 
@@ -350,6 +717,7 @@ document.getElementById('simulatePower').addEventListener('click', async () => {
     navigator.geolocation.getCurrentPosition(async pos => {
       const lat = pos.coords.latitude;
       const lon = pos.coords.longitude;
+      const nearestCity = getNearestCity(lat, lon);
 
       // Save report
       const rep = await createReport({
@@ -359,12 +727,13 @@ document.getElementById('simulatePower').addEventListener('click', async () => {
       });
 
       // Mark user path on map
-      const userMarker = L.marker([lat, lon]).addTo(markerLayer)
-        .bindPopup('<b>Power SOS Triggered</b><br>Location shared.');
+      const userMarker = L.marker([lat, lon])
+        .bindPopup(`<b>Power SOS Triggered</b><br>Location: ${nearestCity}`)
+        .addTo(markerLayer);
       map.setView([lat, lon], 15);
 
       document.getElementById('powerStatus').textContent =
-        `SOS sent! Location: ${lat.toFixed(4)}, ${lon.toFixed(4)}`;
+        `SOS sent! Location: ${nearestCity}`;
     }, () => {
       document.getElementById('powerStatus').textContent =
         'Unable to access location.';
