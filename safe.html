@@ -594,6 +594,32 @@ function saveSettings() {
   localStorage.setItem('trustedContact', trustedContact);
   
   showNotification('success', 'Settings Saved!', `Trusted contact: ${trustedContact || 'None set'}`);
+  
+  // Test SMS if contact is set
+  if(trustedContact) {
+    sendTestSMS(trustedContact);
+  }
+}
+
+async function sendTestSMS(phoneNumber) {
+  try {
+    const response = await fetch(`${window.location.hostname === 'localhost' ? 'http://localhost:3001' : 'https://safetap-sphere-app-production.up.railway.app'}/api/send-sms`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        to: phoneNumber,
+        message: `SafeTap Test: Your emergency contact has been set up successfully. You will receive alerts from this number.`
+      })
+    });
+    
+    if(response.ok) {
+      showNotification('success', 'Test SMS Sent!', `Check ${phoneNumber} for confirmation`);
+    } else {
+      throw new Error('SMS failed');
+    }
+  } catch(error) {
+    showNotification('warning', 'SMS Setup Issue', 'Contact saved but SMS test failed. Check your number.');
+  }
 }
 
 // Load saved settings
