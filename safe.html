@@ -347,24 +347,36 @@ function renderReports(){
     pre.innerHTML='<div style="text-align:center;padding:40px;color:var(--muted);"><h3>📋 No Reports Yet</h3><p>Be the first to contribute to community safety!</p></div>';
   }else{
     pre.innerHTML=r.map(rep=>{
-      const time=new Date(rep.ts).toLocaleString();
+      const time = rep.ts ? new Date(rep.ts).toLocaleString() : new Date(rep.timestamp || Date.now()).toLocaleString();
       const typeIcon=rep.type==='SOS'?'🆘':rep.type==='harassment'?'⚠️':rep.type==='theft'?'🚨':rep.type==='violence'?'🔴':'📝';
+      const mapsLink = rep.lat && rep.lon ? `https://maps.google.com/?q=${rep.lat},${rep.lon}` : '#';
       return `<div class="report-item">
         <div class="report-header">
           <span class="report-type">${typeIcon} ${rep.type.toUpperCase()}</span>
           <span class="report-location">📍 ${rep.location||'Unknown'}</span>
         </div>
         <div class="report-description">${rep.description}</div>
-        <div class="report-time">⏰ ${time}</div>
+        <div class="report-time">⏰ ${time} ${rep.lat && rep.lon ? `<a href="${mapsLink}" target="_blank" style="color: var(--accent-1); text-decoration: none;">🗺️ View Location</a>` : ''}</div>
       </div>`;
     }).join('');
   }
 }
 
 async function createReport({type,description,anonymous}){
-  let lat=cities['Johannesburg'][0], lon=cities['Johannesburg'][1], location='Johannesburg';
+  let lat=-26.2041, lon=28.0473, location='Johannesburg';
   
-  // Always use localStorage for reliability
+  // Try to get actual location for reports too
+  try {
+    const pos = await new Promise((res,rej)=>{
+      navigator.geolocation.getCurrentPosition(res,rej,{timeout:3000});
+    });
+    lat = pos.coords.latitude;
+    lon = pos.coords.longitude;
+    location = getNearestCity(lat, lon);
+  } catch(e) {
+    console.log('Using default location for report');
+  }
+  
   const rep={id:Date.now(),type,description,anonymous,lat,lon,location,ts:new Date().toISOString()};
   const arr=loadReports();arr.push(rep);saveReports(arr);renderReports();return rep;
 }
@@ -410,18 +422,33 @@ function showNotification(type, title, message) {
 $('#sosBtnLarge').onclick=async()=>{
   $('#sosStatus').innerHTML='<div style="color: var(--danger); font-weight: 600;">🚨 Sending Emergency Alert...</div>';
   
-  // Simple fallback that always works
   const alertId = Date.now();
-  const location = 'Johannesburg';
-  const trustedContact = localStorage.getItem('trustedContact');
+  let lat = -26.2041, lon = 28.0473, location = 'Johannesburg';
   
-  // Always create local report
+  // Try to get actual location
+  try {
+    const pos = await new Promise((res,rej)=>{
+      navigator.geolocation.getCurrentPosition(res,rej,{timeout:5000});
+    });
+    lat = pos.coords.latitude;
+    lon = pos.coords.longitude;
+    location = getNearestCity(lat, lon);
+  } catch(e) {
+    console.log('Using default location');
+  }
+  
+  const trustedContact = localStorage.getItem('trustedContact');
+  const mapsLink = `https://maps.google.com/?q=${lat},${lon}`;
+  
+  // Create report with coordinates
   const report = {
     id: alertId,
     type: 'SOS',
     description: 'Emergency SOS activated',
     location: location,
-    timestamp: new Date().toISOString()
+    lat: lat,
+    lon: lon,
+    ts: new Date().toISOString()
   };
   
   // Save to localStorage
@@ -429,15 +456,15 @@ $('#sosBtnLarge').onclick=async()=>{
   reports.push(report);
   localStorage.setItem('safetap_reports_v1', JSON.stringify(reports));
   
-  // Show success message
-  $('#sosStatus').innerHTML=`<div style="color: var(--success); font-weight: 600;">✅ SOS Alert Sent Successfully</div><p style="font-size: 0.9rem; color: var(--muted); margin-top: 8px;">Alert ID: ${alertId} | Location: ${location}${trustedContact ? ' | SMS sent to ' + trustedContact : ''}</p>`;
+  // Show success message with maps link
+  $('#sosStatus').innerHTML=`<div style="color: var(--success); font-weight: 600;">✅ SOS Alert Sent Successfully</div><p style="font-size: 0.9rem; color: var(--muted); margin-top: 8px;">Alert ID: ${alertId} | Location: ${location}<br><a href="${mapsLink}" target="_blank" style="color: var(--accent-1);">🗺️ View on Google Maps</a>${trustedContact ? ' | SMS sent to ' + trustedContact : ''}</p>`;
   
   showNotification('success', 'SOS Alert Sent!', `Emergency alert logged. ${trustedContact ? 'SMS sent to trusted contact.' : 'Add trusted contact in Settings for SMS alerts.'}`);
   
-  // Try to send SMS if contact exists
+  // Send SMS with Google Maps link
   if(trustedContact && window.sendSMS) {
     try {
-      await sendSMS(trustedContact, `🚨 SafeTap Emergency Alert 🚨\nLocation: ${location}\nTime: ${new Date().toLocaleString()}\nThis is an automated emergency message.`);
+      await sendSMS(trustedContact, `🚨 SafeTap Emergency Alert 🚨\nLocation: ${location}\nGoogle Maps: ${mapsLink}\nTime: ${new Date().toLocaleString()}\nThis is an automated emergency message.`);
     } catch(e) {
       console.log('SMS failed:', e);
     }
@@ -445,6 +472,7 @@ $('#sosBtnLarge').onclick=async()=>{
   
   setTimeout(() => {
     if(window.loadCommunityData) loadCommunityData();
+    renderReports();
   }, 1000);
 };
 
@@ -675,9 +703,10 @@ async function loadCommunityData() {
   } else {
     const recent = reports.slice(-5).reverse(); // Show 5 most recent
     recentDiv.innerHTML = recent.map(r => {
-      const time = new Date(r.ts).toLocaleDateString();
+      const time = r.ts ? new Date(r.ts).toLocaleDateString() : new Date(r.timestamp || Date.now()).toLocaleDateString();
       const typeIcon = r.type === 'SOS' ? '🆘' : r.type === 'harassment' ? '⚠️' : r.type === 'theft' ? '🚨' : r.type === 'violence' ? '🔴' : '📝';
       const anonymousLabel = r.anonymous ? '👤 Anonymous' : '👤 User Report';
+      const mapsLink = r.lat && r.lon ? `https://maps.google.com/?q=${r.lat},${r.lon}` : null;
       return `<div style="padding: 12px; border-left: 4px solid var(--accent-1); margin: 10px 0; background: linear-gradient(135deg, rgba(102, 126, 234, 0.05), rgba(240, 147, 251, 0.05)); border-radius: 8px; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 8px rgba(0,0,0,0.1)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
           <strong style="color: var(--accent-1);">${typeIcon} ${r.type.toUpperCase()}</strong>
@@ -688,6 +717,7 @@ async function loadCommunityData() {
           <span>⏰ ${time}</span>
           <span>${anonymousLabel}</span>
         </div>
+        ${mapsLink ? `<div style="margin-top: 4px;"><a href="${mapsLink}" target="_blank" style="color: var(--accent-1); font-size: 0.8rem; text-decoration: none;">🗺️ View Location</a></div>` : ''}
       </div>`;
     }).join('');
   }
