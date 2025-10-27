@@ -26,14 +26,12 @@ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 margin: 0;
 background: linear-gradient(135deg, var(--bg-start) 0%, var(--bg-end) 100%);
 color: #1e293b;
-min-height: 100vh;
 }
 
 .app {
 max-width: 1200px;
 margin: 0 auto;
 padding: 20px;
-min-height: 100vh;
 }
 
 .topnav {
@@ -102,7 +100,6 @@ width: auto;
 
 main {
 position: relative;
-min-height: 500px;
 }
 
 .lead {
