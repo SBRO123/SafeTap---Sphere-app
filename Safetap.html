@@ -197,6 +197,15 @@
       <input type="password" id="loginPass" required placeholder="Enter your password">
       
       <button type="submit">Login</button>
+    </form>
+    <p>Don't have a profile? <a id="gotoCreate">Create one</a></p>
+    <div style="text-align: center; margin-top: 20px; font-size: 0.8rem;">
+      <a onclick="document.getElementById('privacyModal').style.display='block'" style="color: var(--accent-1); margin: 0 10px; cursor: pointer;">Privacy Policy</a> | 
+      <a onclick="document.getElementById('termsModal').style.display='block'" style="color: var(--accent-1); margin: 0 10px; cursor: pointer;">Terms & Conditions</a>
+    </div>
+  </div>
+
+  <!-- Privacy Policy Modal -->
 
       
     </form>
@@ -284,13 +293,22 @@
         return;
       }
       
-      const result = await registerUser(email, pass, name, phone);
-      if (result.success) {
-        alert("Profile created successfully! Please log in.");
-        createProfile.style.display = "none";
-        loginPage.style.display = "block";
-      } else {
-        alert(result.error || "Registration failed");
+      try {
+        const result = await registerUser(email, pass, name, phone);
+        if (result.success) {
+          alert("✅ Profile created successfully! Please log in.");
+          // Clear form
+          document.getElementById("profileForm").reset();
+          createProfile.style.display = "none";
+          loginPage.style.display = "block";
+          // Pre-fill login email
+          document.getElementById("loginEmail").value = email;
+        } else {
+          alert("❌ Registration failed: " + (result.error || "Unknown error"));
+        }
+      } catch (error) {
+        console.error('Registration error:', error);
+        alert("❌ Registration failed: Network error. Please try again.");
       }
     };
 
