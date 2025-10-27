@@ -364,7 +364,7 @@ async function createReport({type,description,anonymous}){
   try {
     const apiReport = await saveReportToAPI({type,description,anonymous,lat,lon});
     renderReports();
-    return apiReport;
+    return {...apiReport, location};
   } catch (error) {
     // Fallback to localStorage
     const rep={id:Date.now(),type,description,anonymous,lat,lon,location,ts:new Date().toISOString()};
