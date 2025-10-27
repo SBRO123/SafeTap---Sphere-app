@@ -412,10 +412,16 @@ $('#sosBtnLarge').onclick=async()=>{
   
   try {
     // Get current location
-    const pos = await new Promise((res,rej)=>navigator.geolocation.getCurrentPosition(res,rej,{timeout:5000}));
-    const lat = pos.coords.latitude;
-    const lon = pos.coords.longitude;
-    const location = getNearestCity(lat, lon);
+    let lat = cities['Johannesburg'][0], lon = cities['Johannesburg'][1], location = 'Johannesburg';
+    
+    try {
+      const pos = await new Promise((res,rej)=>navigator.geolocation.getCurrentPosition(res,rej,{timeout:5000}));
+      lat = pos.coords.latitude;
+      lon = pos.coords.longitude;
+      location = getNearestCity(lat, lon);
+    } catch (geoError) {
+      console.log('Geolocation failed, using default location');
+    }
     
     // Use backend SOS if available
     const sosResult = await triggerSOSAlert(lat, lon, 'Emergency SOS activated');
