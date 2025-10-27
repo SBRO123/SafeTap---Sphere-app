@@ -1,7 +1,7 @@
 // API Integration for SafeTap
 const API_BASE = window.location.hostname === 'localhost' 
   ? 'http://localhost:3001/api'
-  : '/api';
+  : 'https://safetap-sphere-app-production.up.railway.app/api';
 let currentUser = JSON.parse(localStorage.getItem('currentUser'));
 
 // Auth functions
