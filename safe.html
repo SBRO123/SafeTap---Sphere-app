@@ -354,11 +354,9 @@ function renderReports(){
 
 async function createReport({type,description,anonymous}){
   let lat=cities['Johannesburg'][0], lon=cities['Johannesburg'][1], location='Johannesburg';
-  try{
-    const pos=await new Promise((res,rej)=>navigator.geolocation.getCurrentPosition(res,rej,{timeout:3000}));
-    lat=pos.coords.latitude;lon=pos.coords.longitude;
-    location=getNearestCity(lat,lon);
-  }catch{}
+  
+  // Always use Johannesburg as default for demo
+  console.log('Using default location: Johannesburg');
   
   // Try API first, fallback to localStorage
   try {
@@ -373,6 +371,9 @@ async function createReport({type,description,anonymous}){
 }
 
 function getNearestCity(lat,lon){
+  if (!lat || !lon || isNaN(lat) || isNaN(lon)) {
+    return 'Johannesburg';
+  }
   let nearest='Johannesburg',minDist=Infinity;
   Object.entries(cities).forEach(([name,[clat,clon]])=>{
     const dist=Math.sqrt((lat-clat)**2+(lon-clon)**2);
