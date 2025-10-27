@@ -15,10 +15,16 @@
       <button data-screen="map">MAP</button>
       <button data-screen="report">REPORT</button>
       <button data-screen="community">COMMUNITY</button>
-      <button data-screen="support">SUPPORT</button>
-      <button data-screen="education">EDUCATION</button>
-      <button data-screen="admin">ADMIN</button>
-      <button data-screen="settings">SETTINGS</button>
+      
+      <div class="dropdown">
+        <button onclick="toggleDropdown()" class="dropbtn">More ▼</button>
+        <div id="dropdownMenu" class="dropdown-content">
+          <button data-screen="support">SUPPORT</button>
+          <button data-screen="education">EDUCATION</button>
+          <button data-screen="admin">ADMIN</button>
+          <button data-screen="settings">SETTINGS</button>
+        </div>
+      </div>
     </nav>
     
     <main>
@@ -298,10 +304,13 @@ const $$ = s => document.querySelectorAll(s);
 const STORAGE_KEY = "safetap_reports_v1";
 
 // Navigation with smooth transitions
-$$('.topnav button').forEach(btn=>{
+$$('.topnav button[data-screen], .dropdown-content button[data-screen]').forEach(btn=>{
   btn.addEventListener('click',()=>{
-    $$('.topnav button').forEach(b=>b.classList.remove('active'));
+    $$('.topnav button[data-screen], .dropdown-content button[data-screen]').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
+    
+    // Close dropdown if open
+    document.getElementById('dropdownMenu').classList.remove('show');
     
     // Fade out current screen
     const currentScreen = $('.screen.active');
@@ -694,6 +703,24 @@ $$('.topnav button').forEach(btn => {
     }
   });
 });
+
+// Dropdown toggle function
+function toggleDropdown() {
+  document.getElementById('dropdownMenu').classList.toggle('show');
+}
+
+// Close dropdown when clicking outside
+window.onclick = function(event) {
+  if (!event.target.matches('.dropbtn')) {
+    const dropdowns = document.getElementsByClassName('dropdown-content');
+    for (let i = 0; i < dropdowns.length; i++) {
+      const openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+}
 
 // Init
 renderReports();
