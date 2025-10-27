@@ -603,19 +603,12 @@ function saveSettings() {
 
 async function sendTestSMS(phoneNumber) {
   try {
-    const response = await fetch(`${window.location.hostname === 'localhost' ? 'http://localhost:3001' : 'https://safetap-sphere-app-production.up.railway.app'}/api/send-sms`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        to: phoneNumber,
-        message: `SafeTap Test: Your emergency contact has been set up successfully. You will receive alerts from this number.`
-      })
-    });
+    const result = await sendSMS(phoneNumber, `SafeTap Test: Your emergency contact has been set up successfully. You will receive alerts from this number.`);
     
-    if(response.ok) {
+    if(result.success) {
       showNotification('success', 'Test SMS Sent!', `Check ${phoneNumber} for confirmation`);
     } else {
-      throw new Error('SMS failed');
+      throw new Error(result.error || 'SMS failed');
     }
   } catch(error) {
     showNotification('warning', 'SMS Setup Issue', 'Contact saved but SMS test failed. Check your number.');
@@ -646,17 +639,9 @@ async function sendEmergencySMS(phoneNumber, lat, lon, location) {
       console.log('Geocoding failed');
     }
     
-    const response = await fetch(`${window.location.hostname === 'localhost' ? 'http://localhost:3001' : 'https://safetap-sphere-app-production.up.railway.app'}/api/send-sms`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        to: phoneNumber,
-        message: `🚨 SafeTap Emergency Alert 🚨\nCity: ${cityName}\nGoogle Maps: https://maps.google.com/?q=${lat},${lon}\nTime: ${new Date().toLocaleString()}\nThis is an automated emergency message.`
-      })
-    });
+    const result = await sendSMS(phoneNumber, `🚨 SafeTap Emergency Alert 🚨\nCity: ${cityName}\nGoogle Maps: https://maps.google.com/?q=${lat},${lon}\nTime: ${new Date().toLocaleString()}\nThis is an automated emergency message.`);
     
-    const result = await response.json();
-    if(!response.ok) throw new Error(result.error || 'SMS failed');
+    if(!result.success) throw new Error(result.error || 'SMS failed');
     showNotification('success', 'SMS Sent!', `Emergency SMS sent to ${phoneNumber}`);
   } catch(error) {
     console.error('SMS Error:', error);

@@ -92,6 +92,20 @@ async function triggerSOSAlert(lat, lon, message) {
   }
 }
 
+// SMS function
+async function sendSMS(phoneNumber, message) {
+  try {
+    const response = await fetch(`${API_BASE}/send-sms`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ to: phoneNumber, message })
+    });
+    return await response.json();
+  } catch (error) {
+    return { error: error.message };
+  }
+}
+
 // Export functions
 window.loginUser = loginUser;
 window.registerUser = registerUser;
@@ -99,3 +113,4 @@ window.saveReportToAPI = saveReportToAPI;
 window.loadReportsFromAPI = loadReportsFromAPI;
 window.analyzeRisk = analyzeRisk;
 window.triggerSOSAlert = triggerSOSAlert;
+window.sendSMS = sendSMS;
